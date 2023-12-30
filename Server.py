@@ -141,7 +141,7 @@ def get_flight_details(f_iata, flight_data):
                 'arrival_gate': str(flight['arrival'].get('gate', 'N/A')),
                 'status': str(flight['flight_status']),
                 'scheduled_departure_time': str(flight['departure']['scheduled']),
-                'scheduled_arrival_time': str(flight['arrival']['schedule']),
+                'scheduled_arrival_time': str(flight['arrival']['scheduled']),
             }
             break
     return flight_details
