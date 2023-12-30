@@ -1,0 +1,35 @@
+How to use the server and client
+
+<<Server>>
+1. Install python 3 in your system:
+   Make sure that python 3 is installed in your system
+
+2. Install the required dependencies using this command:
+   pip install requests
+
+3. Add your API key:
+   Replace the API key from the AviationStack website into the get_data function
+
+4. Running the server:
+   Run the Server by saving it in a file called 'Server.py' and hitting enter in the terminal
+   to run the code using this command:
+   python3 Server.py
+   With that the server will be working.
+
+<<Client>>
+1. Running the Client:
+   To run the client the same way as the server, save the file and name it 'Client.py',
+   then open a new terminal and run the client using the command:
+   python3 Client.py
+   and with that the Client will be working.
+
+2. Interacting with the GUI in the client:
+   As soon as you run the Client, the GUI will pop up and the user will utilize it to
+   intercat with the server.
+   The user will make use of the buttons to acquire the needed flight information.
+   The user will have to make sure that it follows what it shows on the screen for 
+   any required inputs such as the airport ICAO or the IATA for the flight.
+   When the user wishes to quit, they can click on the quit button to disconnect.
+----------------------------------------------------------------------
+<<Be careful!!>>
+-- Make sure that the server is running first before you run the client.
