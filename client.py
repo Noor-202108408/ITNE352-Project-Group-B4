@@ -105,6 +105,7 @@ def send_request(request_type, data=None):
 
         # Handle the response
         handle_response(request_type, response)
+    
 
 # Create a function to handle quitting
 def quit():
@@ -136,4 +137,9 @@ quit_button = tk.Button(window, text="Quit", command=quit)
 quit_button.pack()
 
 # Run the GUI window
-window.mainloop()
+try:
+    window.mainloop()
+
+except KeyboardInterrupt:
+    print("\nPressed Ctrl + C, Cleaning up!")
+    client_socket.close()
