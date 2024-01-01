@@ -10,7 +10,7 @@ p = 1373
 # Creating the TCP Socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.bind((h, p))
-server_socket.listen()
+server_socket.listen(4)
 print("Server started, waiting for the Username and ICAO code...")
 
 def get_flight_data(arr_icao):
@@ -59,7 +59,7 @@ def handle_client_requests(client_socket, username, response):
                 send(client_socket, flights)
 
             elif request.startswith('d'):
-                f_iata = request[1:]  # Extract flight IATA from the request
+                f_iata = request[1:] # Extract flight IATA from the request
                 print(f_iata)
                 flights = get_flight_details(f_iata, response)
                 print("Sending data to", username, "\n")
@@ -75,10 +75,16 @@ def handle_client_requests(client_socket, username, response):
                 print("Invalid request... \n")
 
         except ConnectionResetError:
+            print(username, " clicked Ctrl+C, so the connection is disconnected ..")
+            client_socket.close()
+            break
+            
+        except:
             print("Sorry, something went wrong...")
             print(username, ", the connection will be discontinued... \n")
             client_socket.close()
             break
+
 
     client_socket.close()
 
