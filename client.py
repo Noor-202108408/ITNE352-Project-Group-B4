@@ -2,6 +2,7 @@ import socket
 import json
 import tkinter as tk
 from tkinter import messagebox, simpledialog
+import threading  # Import threading for handling asynchronous tasks
 
 # Server's information
 S_address = '127.0.0.1'
@@ -17,7 +18,7 @@ client_socket.send(Username.encode('ascii'))
 
 # Create a function to handle response
 def handle_response(request_type, response):
-    # Print the raw response for debugging
+        # Print the raw response for debugging
     print("Raw Response:", repr(response))
 
     try:
@@ -84,7 +85,6 @@ def handle_response(request_type, response):
 
         messagebox.showinfo('Flight Information', flight_info)
 
-# Create a function to send requests to the server
 def send_request(request_type, data=None):
     if request_type.lower() not in ('c', 'd'):
         # Send the request type to the server
@@ -106,14 +106,49 @@ def send_request(request_type, data=None):
         # Handle the response
         handle_response(request_type, response)
     
+    elif request_type.lower() in ('c'):
+        data= input("Enter the city code: ")
+        client_socket.send((request_type + data).encode('ascii'))
 
-# Create a function to handle quitting
+        response = ""
+        while True:
+            chunk = client_socket.recv(4096).decode('ascii')
+            if not chunk:
+                break
+            response += chunk
+            try:
+                json.loads(response)  # Attempt to parse the JSON
+                break  # Break if JSON parsing succeeds
+            except json.JSONDecodeError:
+                continue  # Continue receiving until a complete JSON is received
+
+        # Handle the response
+        handle_response(request_type, response)
+
+    elif request_type.lower() in ('d'):
+        data= input("Enter the flight IATA code: ")
+        client_socket.send((request_type + data).encode('ascii'))
+
+        response = ""
+        while True:
+            chunk = client_socket.recv(4096).decode('ascii')
+            if not chunk:
+                break
+            response += chunk
+            try:
+                json.loads(response)  # Attempt to parse the JSON
+                break  # Break if JSON parsing succeeds
+            except json.JSONDecodeError:
+                continue  # Continue receiving until a complete JSON is received
+
+        # Handle the response
+        handle_response(request_type, response)    
+
+# Updated quit function to send a formal quit signal to the server
 def quit():
-    # Send the quit request type to the server
     client_socket.send("quit".encode('ascii'))
-    # Close the client socket
+    client_socket.shutdown(socket.SHUT_RDWR)  # Send shutdown signal to the socket
     client_socket.close()
-    # Destroy the GUI window
     window.destroy()
 
 # Create a GUI window
@@ -132,14 +167,14 @@ request_menu.add_command(label="Delayed Flights", command=lambda: send_request('
 request_menu.add_command(label="Flights from a City", command=lambda: send_request('c'))
 request_menu.add_command(label="Flight Details", command=lambda: send_request('d'))
 
+
 # Create a quit button
 quit_button = tk.Button(window, text="Quit", command=quit)
 quit_button.pack()
 
-# Run the GUI window
 try:
     window.mainloop()
 
 except KeyboardInterrupt:
     print("\nPressed Ctrl + C, Cleaning up!")
-    client_socket.close()
+    quit()  # Call the quit function to ensure proper cleanup on Ctrl+C
