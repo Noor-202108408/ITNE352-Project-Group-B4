@@ -2,7 +2,6 @@ import socket
 import json
 import tkinter as tk
 from tkinter import messagebox, simpledialog
-import threading  # Import threading for handling asynchronous tasks
 
 # Server's information
 S_address = '127.0.0.1'
