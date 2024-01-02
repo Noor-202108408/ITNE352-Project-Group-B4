@@ -13,6 +13,7 @@ server_socket.bind((h, p))
 server_socket.listen(4)
 print("Server started, waiting for the Username and ICAO code...")
 
+# Creating a function to retrieve and save the data
 def get_flight_data(arr_icao):
     params = {
         'access_key': 'ea6c1e884b89949a23394c284f90b767',
@@ -27,6 +28,7 @@ def get_flight_data(arr_icao):
     response = json.load(open('Group_B4.json', ))
     return response
 
+# Create a function for sending the Data to the client
 def send(client_socket, flights):
     flights_json = json.dumps(flights)  # Convert flights to a JSON string
     client_socket.sendall(flights_json.encode('ascii'))
