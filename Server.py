@@ -84,8 +84,6 @@ def handle_client_requests(client_socket, username, response):
             print(username, ", the connection will be discontinued... \n")
             client_socket.close()
             break
-
-
     client_socket.close()
 
 
